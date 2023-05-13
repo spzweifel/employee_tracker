@@ -1,11 +1,53 @@
 const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
+const { default: Choices } = require('inquirer/lib/objects/choices');
 
 const PORT = process.env.PORT || 3001;
-
 const app = express();
-// GIVEN a command-line application that accepts user input
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        password: 'root',
+        database: 'company_db',
+    },
+    console.log(`Connected to the company_db database.`)
+);
+
+//in the app.get, use the results of a join in query.sql as the route. I think it should look something like '/api/department-employee' or something like that. This should return the departments if I did this and understand it correctly.
+app.get('', (req, res) => {
+    //inside the backticks should be a join statement
+    const sql = ``;
+    db.query(sql, (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message});
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: rows
+        });
+    });
+});
+
+const company = () => {
+    return inquirer.createPromptModule([
+        {
+            type: 'list',
+            name: 'department',
+            message: 'What would you like to do?',
+            choices: ['View All Employees', 'Update employee role', 'View all roles', 'Add role', 'View all departments', 'Add departments', 'quit', 'View all employees']
+        }
+        .then(answers => {
+            console.log()
+        })
+    ])
+}
 // WHEN I start the application
 // THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
 
@@ -29,4 +71,10 @@ const app = express();
 
 // WHEN I choose to update an employee role
 // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+
+// Default response for any other request (Not Found)
+app.use((req, res) => {
+    res.status(404).end();
+});
+
 app.listen(process.env.PORT || 3001, () => console.log(`App listening at http://localhost:${PORT}`));
