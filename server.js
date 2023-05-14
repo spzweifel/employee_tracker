@@ -20,20 +20,23 @@ const db = mysql.createConnection(
 );
 
 //in the app.get, use the results of a join in query.sql as the route. I think it should look something like '/api/department-employee' or something like that. This should return the departments if I did this and understand it correctly.
-app.get('', (req, res) => {
-    //inside the backticks should be a join statement
-    const sql = ``;
+// should read employee names
+app.get('/api/department', (req, res) => {
+    const sql = `SELECT id, name AS title FROM department`;
+
     db.query(sql, (err, rows) => {
         if (err) {
-            res.status(500).json({ error: err.message});
-            return;
+          res.status(500).json({ error: err.message });
+           return;
         }
         res.json({
-            message: 'success',
-            data: rows
+          message: 'success',
+          data: rows
         });
-    });
+      });
 });
+
+
 
 const company = () => {
     return inquirer.createPromptModule([
@@ -42,9 +45,36 @@ const company = () => {
             name: 'department',
             message: 'What would you like to do?',
             choices: ['View All Employees', 'Update employee role', 'View all roles', 'Add role', 'View all departments', 'Add departments', 'quit', 'View all employees']
+        },
+        {
+            type: 'input',
+            name: 'add_department',
+            message: 'What department would you like to add?',
+        },
+        {
+            type: 'input',
+            name: 'add_employee',
+            message: 'Please, enter the name of the employee you would like to add.',
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'What is the salary of this employee?',
+        },
+        {
+            type: 'input',
+            name: 'add_role',
+            message: 'Please, enter the role of this employee.',
+        },
+        {
+            type: 'list',
+            name: 'update',
+            message: 'Select an employee you would like to update',
+            choices: `${employee.name}`
         }
+        //how would I code it so that it writes to sql tables?
         .then(answers => {
-            console.log()
+            console.log(answers)
         })
     ])
 }
