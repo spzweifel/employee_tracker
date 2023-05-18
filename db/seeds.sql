@@ -1,4 +1,4 @@
---put the inserts here with all of the values like employee name and such
+
 INSERT INTO department (id, name)
 VALUES (1, "engineering"),
        (2, "sales"),
@@ -7,13 +7,14 @@ VALUES (1, "engineering"),
        (5, "management");
 
 INSERT INTO roles (id, title, salary, department_id)
-VALUES (1, "engineer", 80000, "engineering"),
-       (2, "salesman", 120000, "sales"),
-       (3, "financier", 60000, "finance"),
-       (4, "lawyer", 90000, "legal"),
-       (5, "manager", 200000, "management");
+VALUES (1, "engineer", 80000, 1),
+       (2, "salesman", 120000, 2),
+       (3, "financier", 60000, 3),
+       (4, "lawyer", 90000, 4),
+       (5, "manager", 200000, 5);
 
 INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
-VALUES (1, "Ben", "Ledoux", 1, )
+VALUES (1, "Ben", "Ledoux", 1, null),
+       (2, "Janey", "Creeden", 2, 1),
+       (3, "Cole", "Hendricks", 1, 2)
 
---join on a manager table and excluding the id
