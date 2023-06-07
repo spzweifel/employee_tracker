@@ -27,6 +27,7 @@ const company = () => {
         message: "What would you like to do?",
         choices: [
           "View all employees",
+          "Add an employee",
           "Update employee role",
           "View all roles",
           "Add role",
@@ -35,50 +36,23 @@ const company = () => {
           "quit",
         ],
       },
-      // {
-      //     type: 'input',
-      //     name: 'add_department',
-      //     message: 'What department would you like to add?',
-      // },
-      // {
-      //     type: 'input',
-      //     name: 'add_employee',
-      //     message: 'Please, enter the name of the employee you would like to add.',
-      // },
-      // {
-      //     type: 'input',
-      //     name: 'salary',
-      //     message: 'What is the salary of this employee?',
-      // },
-      // {
-      //     type: 'input',
-      //     name: 'add_role',
-      //     message: 'Please, enter the role of this employee.',
-      // },
-      // {
-      //     type: 'list',
-      //     name: 'update',
-      //     message: 'Select an employee you would like to update',
-      //     choices: `${employee.name}`
-      // }
-      //how would I code it so that it writes to sql tables?
     ])
     .then((answers) => {
       console.log(answers);
-      //giant if/else statement for every choice in the first question
       if (answers.department === "View all employees") {
         viewAllEmployees();
       } else if (answers.department === "View all roles") {
         viewAllRoles();
       } else if (answers.department === "View all departments") {
         viewAllDepartments();
-        //get help after this point
       } else if (answers.department === "Update employee role") {
         updateEmployeeRole();
       } else if (answers.department === "Add role") {
         addRole();
       } else if (answers.department === "Add departments") {
         addDepartment();
+      } else if (answers.department === "Add an employee") {
+        addEmployee();
       }
     });
 };
@@ -103,7 +77,6 @@ function viewAllDepartments() {
       return;
     }
     console.table(rows);
-    company()
   });
 }
 function viewAllRoles() {
@@ -115,7 +88,7 @@ function viewAllRoles() {
       return;
     }
     console.table(rows);
-    company()
+
   });
 }
 function updateEmployeeRole() {
@@ -186,6 +159,41 @@ function addRole() {
       });
   });
 }
+function addEmployee() {
+  db.query("SELECT first_name, last_name, role_id, manager_id value FROM employee", (err, employeeData) => {
+      inquirer.prompt([
+          {
+            type: "input",
+            name: "first_name",
+            message: "What is the first name of the employee?",
+          },
+          {
+              type: "input",
+              name: "last_name",
+              message: "What is the last name of the employee?",
+          },
+          {
+              type: "input",
+              name: "role_id",
+              message: "What is the role of the employee?",
+          },
+          {
+              type: "input",
+              name: "manager_id",
+              message: "Who is this employee's manager?",
+          },
+        ]).then((answer) => {
+          const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?) `;
+          db.query(
+              sql,
+              [answer.first_name, answer.last_name, answer.role_id, answer.manager_id],
+              (err) => {
+                  viewAllEmployees();
+              }
+          )
+        })
+  })
+}
 function addDepartment() {
   inquirer
     .prompt([
@@ -203,21 +211,5 @@ function addDepartment() {
       });
     });
 }
+
 company();
-
-// do the add employee inquirer
-
-//in the app.get, use the results of a join in query.sql as the route. I think it should look something like '/api/department-employee' or something like that. This should return the departments if I did this and understand it correctly.
-// should read employee names
-// app.get('/api/department', (req, res) => {
-//
-// });
-
-// Default response for any other request (Not Found)
-// app.use((req, res) => {
-//     res.status(404).end();
-// });
-
-// app.listen(process.env.PORT || 3001, () => console.log(`App listening at http://localhost:${PORT}`));
-
-//if they choose to add an employee. get all info first to add. first name, ladt name and such using inquirer. with the exception of id, ask for everything explicitly like first, last name and role and manager id. use an insert into employees() but you won't know name and id until the name is gotten from inquirer. in syntax, it is exactly what the seeds file is doing.
