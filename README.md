@@ -9,4 +9,4 @@ MIT License
 
 ## Walkthrough Video
 
-![video](assets/Employeetracker.webm)
+https://app.screencastify.com/manage/videos/SBjvwIe3eYIWHqtq18Ri
