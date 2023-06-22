@@ -27,12 +27,12 @@ const company = () => {
         message: "What would you like to do?",
         choices: [
           "View all employees",
-          "Add an employee",
-          "Update employee role",
           "View all roles",
-          "Add role",
           "View all departments",
+          "Update employee role",
+          "Add role",
           "Add departments",
+          "Add an employee",
           "quit",
         ],
       },
@@ -53,42 +53,44 @@ const company = () => {
         addDepartment();
       } else if (answers.department === "Add an employee") {
         addEmployee();
+        //add this function
+      } else if (answers.department === "quit") {
+        quit();
       }
     });
 };
 
-function viewAllEmployees() {
-  const sql = `SELECT id, first_name, last_name, role_id, manager_id AS title FROM employee`;
+const viewAllEmployees = () => {
+  const sql = `SELECT * FROM employee`;
 
   db.query(sql, (err, rows) => {
     if (err) {
       console.log(err);
-      return;
     }
     console.table(rows);
+    company();
   });
 }
-function viewAllDepartments() {
-  const sql = `SELECT id, name AS name FROM department`;
+const viewAllDepartments = () => {
+  const sql = `SELECT * FROM department`;
 
   db.query(sql, (err, rows) => {
     if (err) {
       console.log(err);
-      return;
     }
     console.table(rows);
+    company();
   });
 }
-function viewAllRoles() {
-  const sql = `SELECT id, title, salary, department_id AS name FROM roles`;
+const viewAllRoles = () => {
+  const sql = `SELECT * FROM roles`;
 
   db.query(sql, (err, rows) => {
     if (err) {
       console.log(err);
-      return;
     }
     console.table(rows);
-
+    company();
   });
 }
 function updateEmployeeRole() {
